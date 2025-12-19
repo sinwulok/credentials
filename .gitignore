@@ -20,7 +20,6 @@ $RECYCLE.BIN/
 .idea/
 *.swp
 *.swo
-*~
 .project
 .classpath
 .settings/
@@ -53,4 +52,3 @@ out/
 # Backup files
 *.bak
 *.backup
-*~
