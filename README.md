@@ -1,49 +1,83 @@
-# Credentials
+# 憑證與資歷展示 / Credentials & Qualifications
 
-## Purpose
+本 repository 用來公開展示我已取得的憑證與資歷（此 repo 含有 README 以及一個公開的 Pages）。  
+This repository is used to publicly showcase my obtained credentials and qualifications (this repo contains a README and a public Pages site).
 
-This repository serves as a public showcase of my professional digital certifications and credentials. It provides a centralized location to document and verify my earned credentials with proper attribution and verification links.
+---
 
-## Structure
+## 目錄 / Table of contents
+- 概要 / Overview
+- 結構 / Repository structure
+- 如何新增憑證 / How to add a certificate
+- 驗證 / Verification
+- 隱私與使用條款 / Privacy & Terms of Use
+- GitHub Pages
+- 貢獻 / Contributing
+- 聯絡 / Contact
 
-```
-credentials/
-├── README.md                    # This file - overview and usage terms
-├── LICENSE                      # All rights reserved license
-├── .gitignore                  # Git ignore patterns
-├── certs/                      # Certificate documentation
-│   └── EXAMPLE.md              # Example credential format
-└── assets/
-    └── thumbnails/             # Thumbnail images for credentials
-        └── .gitkeep
-```
+---
 
-### Certificates Directory
+## 概要 / Overview
+本 repo 以公開方式展示可驗證的憑證與資歷的 metadata（標題、發證機構、取得日期、驗證連結、去識別化縮圖、標籤、摘要等）。內容可能包含數位認證、執照、badge、學歷證明及其他可驗證的資歷。為保護個資，原始憑證（PDF 或含敏感個資的文件）不會存放在公開 repo 中。  
+This repo publicly displays verifiable credential metadata and qualifications (title, issuer, date, verification link, de‑identified thumbnail, tags, summary, etc.). It may include digital certifications, issued licenses, badges, academic credentials, and other verifiable qualifications. To protect personal data, original certificates (PDFs or documents containing sensitive personal information) are not stored in this public repository.
 
-The `certs/` directory contains markdown files documenting each credential. Each file includes:
-- YAML frontmatter with metadata (title, issuer, date, verification URL, credential ID, image, tags, summary)
-- Additional details about the credential
-- Skills and knowledge areas covered
+---
 
-### Assets Directory
+## 結構 / Repository structure
+- `README.md` — 本文件（中英混合）  
+- `certs/` — 每張憑證一個 Markdown 檔，YAML frontmatter 包含 title、issuer、date、verification_url、credential_id（或其 hash）、image、tags、summary  
+- `assets/thumbnails/` — 憑證縮圖（已去識別化）  
+- `docs/` — (選用) GitHub Pages 靜態站點內容  
+- `LICENSE` — 權利聲明（All rights reserved）
 
-The `assets/thumbnails/` directory stores thumbnail images referenced by the credential documents.
+- `README.md` — this bilingual README  
+- `certs/` — one markdown file per credential with YAML frontmatter (title, issuer, date, verification_url, credential_id (or hashed id), image, tags, summary)  
+- `assets/thumbnails/` — de‑identified thumbnails for display  
+- `docs/` — (optional) GitHub Pages site content  
+- `LICENSE` — rights statement (All rights reserved)
 
-## Privacy
+---
 
-This repository contains only publicly verifiable information about credentials I have earned. No sensitive personal information is included. All credentials listed can be independently verified through the provided verification URLs and credential IDs.
+## 如何新增憑證 / How to add a certificate
+1. 在 `certs/` 新增 Markdown 檔，參考 `certs/EXAMPLE.md` 的 frontmatter 格式。  
+2. 將縮圖上傳至 `assets/thumbnails/`（勿包含完整個人資料或敏感文字）。  
+3. 建議在 PR 描述中附上官方的驗證連結（verification_url）。  
+4. 若憑證含敏感資訊，請勿直接上傳完整檔；改放私有儲存並僅於 README 或 cert 的 metadata 中放驗證連結或 hash。  
 
-## Usage Terms
+1. Add a new markdown file in `certs/`, following the frontmatter in `certs/EXAMPLE.md`.  
+2. Upload a de‑identified thumbnail to `assets/thumbnails/` (do not include full personal data or sensitive text).  
+3. Include the official verification link in the PR description (verification_url).  
+4. If the credential contains sensitive information, do not upload the original file—store it privately and expose only verification links or hashed IDs in the public metadata.
 
-**All Rights Reserved**
+---
 
-Copyright © 2025. All rights reserved.
+## 驗證 / Verification
+請優先使用發證機構或第三方（如 Credly）的官方驗證連結。metadata 應能讓驗證者追溯並向發證機構查證。  
+Prefer official verification links from the issuer or third parties (e.g., Credly). The metadata should allow verifiers to trace and confirm credentials with the issuing organization.
 
-This repository and its contents are made available for viewing purposes only. The following restrictions apply:
+---
 
-- **No Redistribution**: You may not copy, redistribute, republish, or repost any content from this repository
-- **No Modification**: You may not create derivative works based on this content
-- **No Commercial Use**: You may not use this content for commercial purposes
-- **Personal Reference Only**: Content may be viewed for personal reference and verification purposes only
+## 隱私與使用條款 / Privacy & Terms of Use
+此 repository 的內容僅供線上檢視與驗證用途；未經書面同意，嚴禁任何形式的複製、轉載、公開散佈或改作（包括截圖、下載並重發、在第三方平台貼出等）。如需重用或取得原始憑證檔，請提出書面申請並說明用途與受眾。  
+The contents of this repository are provided for online viewing and verification only. Without written permission, any copying, redistribution, public display, reposting, or creation of derivative works (including screenshots, downloading and re‑sharing, or posting on third‑party platforms) is prohibited. To request reuse or access to original credential files, submit a written request specifying purpose and audience.
 
-For any questions regarding the use of this content, please contact the repository owner.
+備註：LICENSE 或 repo 的聲明無法技術性阻止他人手動複製（例如截圖）；其作用主要為法律依據。若需更嚴格的技術性保護，請將敏感原件保存在 private repository 或其他受控存取的儲存空間。  
+Note: a license or repo notice cannot technically prevent manual copying (e.g., screenshots); it provides legal basis for enforcement. For stronger technical control, keep sensitive originals in a private repository or other access‑controlled storage.
+
+---
+
+## GitHub Pages
+此 repo 可能包含公開的 GitHub Pages。Pages 的內容會對有連結的人公開可見，請勿在 Pages 上發布未經處理的敏感資料。  
+This repo may include a public GitHub Pages site. Pages content is publicly accessible to anyone with the link — do not publish un‑sanitized sensitive data on Pages.
+
+---
+
+## 貢獻 / Contributing
+歡迎透過 Pull Request 提交或建議修改。在送出前請確認：條目不含敏感個資、包含官方驗證連結，且縮圖已去識別化。  
+Contributions via Pull Request are welcome. Before submitting, ensure entries contain no sensitive personal data, include an official verification link, and have de‑identified thumbnails.
+
+---
+
+## 聯絡 / Contact
+如需查核原件或申請重用，請聯絡：sinwulok（請註明用途與受眾）。  
+To request verification of originals or permission for reuse, contact: sinwulok (please include purpose and audience in your message).
