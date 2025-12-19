@@ -3,6 +3,7 @@
 本 repository 用來公開展示我已取得的憑證與資歷（此 repo 含有 README 以及一個公開的 Pages）。  
 This repository is used to publicly showcase my obtained credentials and qualifications (this repo contains a README and a public Pages site).
 
+---
 
 ## 目錄 / Table of contents
 - 概要 / Overview
