@@ -23,34 +23,6 @@ This repo publicly displays verifiable credential metadata and qualifications (t
 
 ---
 
-## 結構 / Repository structure
-- `README.md` — 本文件（中英混合）  
-- `certs/` — 每張憑證一個 Markdown 檔，YAML frontmatter 包含 title、issuer、date、verification_url、credential_id（或其 hash）、image、tags、summary  
-- `assets/thumbnails/` — 憑證縮圖（已去識別化）  
-- `docs/` — (選用) GitHub Pages 靜態站點內容  
-- `LICENSE` — 權利聲明（All rights reserved）
-
-- `README.md` — this bilingual README  
-- `certs/` — one markdown file per credential with YAML frontmatter (title, issuer, date, verification_url, credential_id (or hashed id), image, tags, summary)  
-- `assets/thumbnails/` — de‑identified thumbnails for display  
-- `docs/` — (optional) GitHub Pages site content  
-- `LICENSE` — rights statement (All rights reserved)
-
----
-
-## 如何新增憑證 / How to add a certificate
-1. 在 `certs/` 新增 Markdown 檔，參考 `certs/EXAMPLE.md` 的 frontmatter 格式。  
-2. 將縮圖上傳至 `assets/thumbnails/`（勿包含完整個人資料或敏感文字）。  
-3. 建議在 PR 描述中附上官方的驗證連結（verification_url）。  
-4. 若憑證含敏感資訊，請勿直接上傳完整檔；改放私有儲存並僅於 README 或 cert 的 metadata 中放驗證連結或 hash。  
-
-1. Add a new markdown file in `certs/`, following the frontmatter in `certs/EXAMPLE.md`.  
-2. Upload a de‑identified thumbnail to `assets/thumbnails/` (do not include full personal data or sensitive text).  
-3. Include the official verification link in the PR description (verification_url).  
-4. If the credential contains sensitive information, do not upload the original file—store it privately and expose only verification links or hashed IDs in the public metadata.
-
----
-
 ## 驗證 / Verification
 請優先使用發證機構或第三方（如 Credly）的官方驗證連結。metadata 應能讓驗證者追溯並向發證機構查證。  
 Prefer official verification links from the issuer or third parties (e.g., Credly). The metadata should allow verifiers to trace and confirm credentials with the issuing organization.
@@ -60,9 +32,6 @@ Prefer official verification links from the issuer or third parties (e.g., Credl
 ## 隱私與使用條款 / Privacy & Terms of Use
 此 repository 的內容僅供線上檢視與驗證用途；未經書面同意，嚴禁任何形式的複製、轉載、公開散佈或改作（包括截圖、下載並重發、在第三方平台貼出等）。如需重用或取得原始憑證檔，請提出書面申請並說明用途與受眾。  
 The contents of this repository are provided for online viewing and verification only. Without written permission, any copying, redistribution, public display, reposting, or creation of derivative works (including screenshots, downloading and re‑sharing, or posting on third‑party platforms) is prohibited. To request reuse or access to original credential files, submit a written request specifying purpose and audience.
-
-備註：LICENSE 或 repo 的聲明無法技術性阻止他人手動複製（例如截圖）；其作用主要為法律依據。若需更嚴格的技術性保護，請將敏感原件保存在 private repository 或其他受控存取的儲存空間。  
-Note: a license or repo notice cannot technically prevent manual copying (e.g., screenshots); it provides legal basis for enforcement. For stronger technical control, keep sensitive originals in a private repository or other access‑controlled storage.
 
 ---
 
