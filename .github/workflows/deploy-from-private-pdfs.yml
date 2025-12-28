@@ -1,0 +1,56 @@
+name: Build thumbnails from private PDFs and deploy Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:   # <-- 這行允許手動觸發
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      PRIVATE_PDFS_REPO: ${{ secrets.PRIVATE_PDFS_REPO }} # e.g. sinwulok/private-pdfs
+    steps:
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout private PDFs repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PRIVATE_PDFS_REPO }}
+          token: ${{ secrets.PRIVATE_REPO_PAT }}
+          path: private-pdfs
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate thumbnails & redact (from private PDFs)
+        run: |
+          mkdir -p docs/assets/thumbnails
+          python scripts/generate_thumbnails_and_redact.py --input-dir private-pdfs --out-dir docs/assets/thumbnails --patterns-file config/redact_patterns.json
+
+      - name: Build docs index
+        run: |
+          if [ -f package.json ]; then
+            npm ci || npm install
+          fi
+          node scripts/build-index.js || echo "no build-index.js"
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          keep_files: false
