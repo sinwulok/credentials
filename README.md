@@ -7,8 +7,6 @@ This repository is used to publicly showcase my obtained credentials and qualifi
 
 ## 目錄 / Table of contents
 - 概要 / Overview
-- 結構 / Repository structure
-- 如何新增憑證 / How to add a certificate
 - 驗證 / Verification
 - 隱私與使用條款 / Privacy & Terms of Use
 - GitHub Pages
