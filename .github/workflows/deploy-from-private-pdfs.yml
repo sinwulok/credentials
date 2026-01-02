@@ -44,18 +44,18 @@ jobs:
       - name: Build thumbnails index (for deploy)
         run: |
           python - <<'PY'
-import os, json
-p = "docs/assets/thumbnails"
-if os.path.isdir(p):
-    imgs = [f for f in os.listdir(p) if f.lower().endswith(".png")]
-    imgs.sort()
-    os.makedirs(p, exist_ok=True)
-    with open(os.path.join(p, "index.json"), "w") as fh:
-        json.dump(imgs, fh)
-    print(f"Wrote {len(imgs)} entries to {p}/index.json")
-else:
-    print(f"Directory not found: {p}")
-PY
+          import os, json
+          p = "docs/assets/thumbnails"
+          if os.path.isdir(p):
+            imgs = [f for f in os.listdir(p) if f.lower().endswith(".png")]
+            imgs.sort()
+            os.makedirs(p, exist_ok=True)
+            with open(os.path.join(p, "index.json"), "w") as fh:
+                json.dump(imgs, fh)
+            print(f"Wrote {len(imgs)} entries to {p}/index.json")
+          else:
+              print(f"Directory not found: {p}")
+          PY
 
       - name: Build docs index
         run: |
