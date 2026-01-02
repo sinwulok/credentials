@@ -22,17 +22,17 @@ jobs:
       - name: Build thumbnails index.json
         run: |
           python - <<'PY'
-import os, json
-p = "assets/thumbnails"
-if os.path.isdir(p):
-    imgs = [f for f in os.listdir(p) if f.lower().endswith(".png")]
-    imgs.sort()
-    with open(os.path.join(p, "index.json"), "w") as fh:
-        json.dump(imgs, fh)
-    print(f"Wrote {len(imgs)} entries to {p}/index.json")
-else:
-    print(f"Directory not found: {p}")
-PY
+          import os, json
+          p = "assets/thumbnails"
+          if os.path.isdir(p):
+              imgs = [f for f in os.listdir(p) if f.lower().endswith(".png")]
+              imgs.sort()
+              with open(os.path.join(p, "index.json"), "w") as fh:
+                  json.dump(imgs, fh)
+              print(f"Wrote {len(imgs)} entries to {p}/index.json")
+          else:
+              print(f"Directory not found: {p}")
+          PY
 
       - name: Commit and push index.json (if changed)
         run: |
