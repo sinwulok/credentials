@@ -10,7 +10,7 @@ Design highlights:
 - Optional concurrency via --workers.
 
 Usage:
-  python scripts/generate_thumbnails_and_redact.py --input-dir private-pdfs --out-dir docs/assets/thumbnails
+  python scripts/generate_thumbnails_and_redact.py --input-dir private-files --out-dir docs/assets/thumbnails
 """
 from __future__ import annotations
 
