@@ -12,7 +12,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      PRIVATE_PDFS_REPO: ${{ secrets.PRIVATE_PDFS_REPO }} # e.g. sinwulok/private-pdfs
+      PRIVATE_PDFS_REPO: ${{ secrets.PRIVATE_PDFS_REPO }} # e.g. sinwulok/private-files
     steps:
       - name: Checkout public repo
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
         with:
           repository: ${{ env.PRIVATE_PDFS_REPO }}
           token: ${{ secrets.PRIVATE_REPO_PAT }}
-          path: private-pdfs
+          path: private-files
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -39,7 +39,7 @@ jobs:
       - name: Generate thumbnails & redact (from private PDFs)
         run: |
           mkdir -p docs/assets/thumbnails
-          python scripts/generate_thumbnails_and_redact.py --input-dir private-pdfs --out-dir docs/assets/thumbnails --patterns-file config/redact_patterns.json
+          python scripts/generate_thumbnails_and_redact.py --input-dir private-files --out-dir docs/assets/thumbnails --patterns-file config/redact_patterns.json
 
       - name: Build thumbnails index (for deploy)
         run: |
