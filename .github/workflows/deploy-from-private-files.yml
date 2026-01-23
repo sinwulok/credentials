@@ -3,7 +3,7 @@ name: Build thumbnails from private files and deploy Pages
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:   # <-- 這行允許手動觸發
+  workflow_dispatch:   # <-- This line allows manual triggering
 
 permissions:
   contents: write
