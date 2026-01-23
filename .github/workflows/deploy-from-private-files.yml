@@ -1,4 +1,4 @@
-name: Build thumbnails from private PDFs and deploy Pages
+name: Build thumbnails from private files and deploy Pages
 
 on:
   push:
@@ -12,17 +12,17 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      PRIVATE_PDFS_REPO: ${{ secrets.PRIVATE_PDFS_REPO }} # e.g. sinwulok/private-files
+      PRIVATE_FILES_REPO: ${{ secrets.PRIVATE_FILES_REPO }} # e.g. sinwulok/private-files
     steps:
       - name: Checkout public repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Checkout private PDFs repo
+      - name: Checkout private files repo
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.PRIVATE_PDFS_REPO }}
+          repository: ${{ env.PRIVATE_FILES_REPO }}
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: private-files
 
@@ -36,7 +36,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate thumbnails & redact (from private PDFs)
+      - name: Generate thumbnails & redact (from private files)
         run: |
           mkdir -p docs/assets/thumbnails
           python scripts/generate_thumbnails_and_redact.py --input-dir private-files --out-dir docs/assets/thumbnails --patterns-file config/redact_patterns.json

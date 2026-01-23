@@ -2,7 +2,7 @@ name: Generate thumbnails index on deploy
 
 on:
   workflow_run:
-    workflows: ["Build thumbnails from private PDFs and deploy Pages"]
+    workflows: ["Build thumbnails from private files and deploy Pages"]
     types: [completed]
 
 jobs:
