@@ -30,8 +30,9 @@ The contents of this repository are provided for online viewing and verification
 
 
 ## GitHub Pages
-此 repo 可能包含公開的 GitHub Pages。Pages 的內容會對有連結的人公開可見，請勿在 Pages 上發布未經處理的敏感資料。  
-This repo may include a public GitHub Pages site. Pages content is publicly accessible to anyone with the link — do not publish un‑sanitized sensitive data on Pages.
+#### https://sinwulok.github.io/credentials/ 
+此 repo 包含公開的 GitHub Pages。
+This repo may include a public GitHub Pages site.
 
 
 ## 貢獻 / Contributing
