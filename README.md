@@ -6,12 +6,19 @@ This repository is used to publicly showcase my obtained credentials and qualifi
 ---
 
 ## 目錄 / Table of contents
+- GitHub Pages
 - 概要 / Overview
 - 驗證 / Verification
 - 隱私與使用條款 / Privacy & Terms of Use
-- GitHub Pages
 - 貢獻 / Contributing
 - 聯絡 / Contact
+
+---
+
+## GitHub Pages
+#### https://sinwulok.github.io/credentials/ 
+此 repo 包含公開的 GitHub Pages。
+This repo may include a public GitHub Pages site.
 
 
 ## 概要 / Overview
@@ -27,12 +34,6 @@ Prefer official verification links from the issuer or third parties (e.g., Credl
 ## 隱私與使用條款 / Privacy & Terms of Use
 此 repository 的內容僅供線上檢視與驗證用途；未經書面同意，嚴禁任何形式的複製、轉載、公開散佈或改作（包括截圖、下載並重發、在第三方平台貼出等）。如需重用或取得原始憑證檔，請提出書面申請並說明用途與受眾。  
 The contents of this repository are provided for online viewing and verification only. Without written permission, any copying, redistribution, public display, reposting, or creation of derivative works (including screenshots, downloading and re‑sharing, or posting on third‑party platforms) is prohibited. To request reuse or access to original credential files, submit a written request specifying purpose and audience.
-
-
-## GitHub Pages
-#### https://sinwulok.github.io/credentials/ 
-此 repo 包含公開的 GitHub Pages。
-This repo may include a public GitHub Pages site.
 
 
 ## 貢獻 / Contributing
