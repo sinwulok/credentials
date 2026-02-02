@@ -1,4 +1,4 @@
-name: Build thumbnails from private PDFs and deploy Pages
+name: Build thumbnails from private files and deploy Pages
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      PRIVATE_PDFS_REPO: ${{ secrets.PRIVATE_PDFS_REPO }} # e.g. sinwulok/private-files
+      PRIVATE_FILES_REPO: ${{ secrets.PRIVATE_FILES_REPO }} # e.g. sinwulok/private-files
     steps:
       - name: Checkout public repo
         uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
       - name: Checkout private PDFs repo
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.PRIVATE_PDFS_REPO }}
+          repository: ${{ env.PRIVATE_FILES_REPO }}
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: private-files
 
