@@ -52,3 +52,11 @@ out/
 # Backup files
 *.bak
 *.backup
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
