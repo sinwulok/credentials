@@ -5,6 +5,8 @@ Ingest private credentials data from JSON/CSV/TSV files.
 Reads files from private-files/credentials directory, normalizes records,
 and writes output to docs/data/credentials.json and auxiliary index files.
 
+Requires Python 3.9+ for modern type annotations.
+
 Usage:
   python scripts/ingest_private_files.py --input-dir private-files/credentials --out-dir docs/data
 """
@@ -17,6 +19,11 @@ import csv
 import argparse
 from typing import Any, Dict, List, Iterable
 from pathlib import Path
+
+
+# Default order value for records without an explicit order
+# Large number ensures unordered items appear last when sorted
+DEFAULT_ORDER = 999999
 
 
 # Required fields for each credential record
@@ -205,7 +212,8 @@ class IngestProcessor:
         print(f"Found {len(self.records)} raw record(s)")
         
         # Sort records by order, then by id
-        self.records.sort(key=lambda r: (r.get("order") or 999999, r.get("id") or 0))
+        # Records without order get DEFAULT_ORDER to appear last
+        self.records.sort(key=lambda r: (r.get("order") or DEFAULT_ORDER, r.get("id") or 0))
         
         return len(self.records)
     
