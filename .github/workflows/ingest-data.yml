@@ -1,4 +1,4 @@
-name: Ingest credentials data
+name: Ingest credentials data (artifact)
 
 on:
   workflow_dispatch:
@@ -7,7 +7,6 @@ permissions:
   contents: read
 
 env:
-  # secret value should be e.g. "sinwulok/private-files"
   PRIVATE_FILES_REPO: ${{ secrets.PRIVATE_FILES_REPO }}
 
 jobs:
@@ -20,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout private files repo (if configured)
+      - name: Checkout private files repo
         uses: actions/checkout@v4
         with:
           repository: ${{ env.PRIVATE_FILES_REPO }}
@@ -32,7 +31,7 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: (Optional) Cache pip
+      - name: Optional: Cache pip
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
@@ -46,20 +45,32 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         shell: bash
 
-      - name: Run ingest script -> generate docs/data
+      - name: Debug: show private-files layout
         run: |
-          # ensure output dir
-          mkdir -p docs/data
-          # run ingest script - adjust args if your script expects different paths
-          python scripts/ingest_private_files.py --input-dir private-files/credentials --out-dir docs/data
+          echo "PRIVATE_FILES_REPO=${{ env.PRIVATE_FILES_REPO }}"
+          echo "root listing of private-files:"
+          ls -la private-files || true
+          echo "files directory (if present):"
+          ls -la private-files/files || true
+          echo "credentials directory (if present):"
+          ls -la private-files/files/credentials || ls -la private-files/credentials || true
         shell: bash
 
-      - name: List generated data (debug)
+      - name: Run ingest script -> produce docs/data + reports + thumbnails mapping
+        run: |
+          mkdir -p docs/data
+          # pass --search-root so script can look for source PDFs under private-files
+          python scripts/ingest_private_files.py --input-dir private-files/files/credentials --out-dir docs/data --search-root private-files
+        shell: bash
+
+      - name: List generated outputs (debug)
         run: |
           echo "=== docs/data ==="
           ls -la docs/data || true
-          echo "=== thumbnails (if any) ==="
+          echo "=== thumbnails ==="
           ls -la docs/assets/thumbnails || true
+          echo "=== reports ==="
+          ls -la reports || true
         shell: bash
 
       - name: Upload generated data & reports as artifact
