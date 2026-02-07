@@ -1,4 +1,4 @@
-name: Build thumbnails from private REPOS and deploy Pages
+name: Build thumbnails from private repos and deploy Pages
 
 on:
   push:
