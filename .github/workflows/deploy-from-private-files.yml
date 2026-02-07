@@ -57,9 +57,19 @@ jobs:
           echo "Listing private-files/credentials directory:"
           ls -la private-files/credentials/ || echo "Directory not found: private-files/credentials. Verify private repo checkout and directory structure."
 
+      - name: "Debug: list private-files and credentials paths"
+        run: |
+          echo "Listing private-files root:"
+          ls -la private-files || true
+          echo "Listing private-files/files:"
+          ls -la private-files/files || true
+          echo "Listing private-files/files/credentials:"
+          ls -la private-files/files/credentials || true
+        shell: bash
+
       - name: Ingest descriptive data
         run: |
-          python scripts/ingest_private_files.py --input-dir private-files/credentials --out-dir docs/data
+          python scripts/ingest_private_files.py --input-dir private-files/files/credentials --out-dir docs/data
 
       - name: Generate thumbnails & redact (from private PDFs)
         run: |
