@@ -19,19 +19,39 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout private files repo
+      - name: Checkout private files repo (if configured)
         uses: actions/checkout@v4
         with:
           repository: ${{ env.PRIVATE_FILES_REPO }}
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: private-files
 
+      - name: Debug: inspect checked-out private-files
+        run: |
+          echo "---- Env ----"
+          echo "PRIVATE_FILES_REPO=${{ env.PRIVATE_FILES_REPO }}"
+          echo "---- listing private-files root ----"
+          ls -la private-files || echo "private-files not present"
+          echo "---- listing private-files/files (if exists) ----"
+          ls -la private-files/files || echo "private-files/files not present"
+          echo "---- listing private-files/credentials (if exists) ----"
+          ls -la private-files/credentials || echo "private-files/credentials not present"
+          echo "---- git info for private-files ----"
+          if [ -d private-files/.git ]; then
+            git -C private-files rev-parse --abbrev-ref HEAD || true
+            git -C private-files log -1 --pretty=format:'%h %s (%an)' || true
+            git -C private-files remote -v || true
+          else
+            echo "private-files is not a git repo or .git missing"
+          fi
+        shell: bash
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Optional: Cache pip
+      - name: (Optional) Cache pip
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
@@ -45,32 +65,19 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         shell: bash
 
-      - name: Debug: show private-files layout
-        run: |
-          echo "PRIVATE_FILES_REPO=${{ env.PRIVATE_FILES_REPO }}"
-          echo "root listing of private-files:"
-          ls -la private-files || true
-          echo "files directory (if present):"
-          ls -la private-files/files || true
-          echo "credentials directory (if present):"
-          ls -la private-files/files/credentials || ls -la private-files/credentials || true
-        shell: bash
-
-      - name: Run ingest script -> produce docs/data + reports + thumbnails mapping
+      - name: Run ingest script -> generate docs/data
         run: |
           mkdir -p docs/data
-          # pass --search-root so script can look for source PDFs under private-files
-          python scripts/ingest_private_files.py --input-dir private-files/files/credentials --out-dir docs/data --search-root private-files
+          # ensure script receives optional search-root to map source files
+          python scripts/ingest_private_files.py --input-dir private-files/credentials --out-dir docs/data --search-root private-files
         shell: bash
 
-      - name: List generated outputs (debug)
+      - name: List generated data (debug)
         run: |
           echo "=== docs/data ==="
           ls -la docs/data || true
-          echo "=== thumbnails ==="
+          echo "=== thumbnails (if any) ==="
           ls -la docs/assets/thumbnails || true
-          echo "=== reports ==="
-          ls -la reports || true
         shell: bash
 
       - name: Upload generated data & reports as artifact
