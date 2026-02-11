@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      PRIVATE_FILES_REPO: ${{ secrets.PRIVATE_FILES_REPO }} # e.g. sinwulok/private-repos
+      PRIVATE_FILES_REPO: ${{ secrets.PRIVATE_FILES_REPO }} # e.g. username/repos
     steps:
       - name: Checkout public repo
         uses: actions/checkout@v4
