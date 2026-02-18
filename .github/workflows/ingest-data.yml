@@ -57,7 +57,7 @@ jobs:
         run: |
           mkdir -p docs/data
           # ensure script receives optional search-root to map source files
-          python scripts/ingest_private_files.py --input-dir private-files/credentials --out-dir docs/data --search-root private-files
+          python scripts/ingest_private_files.py --input-dir private-files/credentials --out-dir docs/data
         shell: bash
 
       - name: List generated data (debug)
