@@ -22,7 +22,7 @@ jobs:
       - name: Checkout private files repo (if configured)
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.PRIVATE_FILES_REPO }}
+          repository: ${{ secrets.PRIVATE_FILES_REPO }}
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: private-files
 
