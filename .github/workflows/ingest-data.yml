@@ -19,6 +19,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Validate PRIVATE_FILES_REPO secret
+        run: |
+          if [ -z "${{ secrets.PRIVATE_FILES_REPO }}" ]; then
+            echo "ERROR: secrets.PRIVATE_FILES_REPO is empty. Set it in repo Settings -> Secrets.";
+            exit 1;
+          fi
+        shell: bash
+
       - name: Checkout private files repo (if configured)
         uses: actions/checkout@v4
         with:
@@ -55,9 +63,9 @@ jobs:
       - name: List generated data (debug)
         run: |
           echo "=== docs/data ==="
-          ls -la docs/data || true
+          if [ -d docs/data ]; then ls -la docs/data; else echo "docs/data not present"; fi
           echo "=== thumbnails (if any) ==="
-          ls -la docs/assets/thumbnails || true
+          if [ -d docs/assets/thumbnails ]; then ls -la docs/assets/thumbnails; else echo "docs/assets/thumbnails not present"; fi
         shell: bash
 
       - name: Upload generated data & reports as artifact
@@ -66,5 +74,5 @@ jobs:
           name: credentials-data
           path: |
             docs/data
-            docs/assets/thumbnails || true
-            reports || true
+            docs/assets/thumbnails
+            reports
