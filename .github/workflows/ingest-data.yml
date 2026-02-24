@@ -80,34 +80,28 @@ jobs:
             reports
 
   deploy_pages:
-    name: Deploy generated docs to GitHub Pages
+    name: Deploy generated docs to GitHub Pages (official)
     needs: ingest
     runs-on: ubuntu-latest
     steps:
-      - name: Download generated artifact
+      - name: Download site artifact
         uses: actions/download-artifact@v4
         with:
-          name: credentials-data
+          name: site-build
           path: site
   
-      - name: Ensure docs directory exists
+      - name: Inspect downloaded site (debug)
         run: |
-          # The artifact should contain a docs/ directory when downloaded to 'site'
-          if [ -d "site/docs" ]; then
-            echo "site/docs found"
-          elif [ -d "site" ] && ls site | grep -q '^docs$'; then
-            echo "site/docs found via listing"
-          else
-            echo "ERROR: site/docs not found after downloading artifact"
-            ls -la site || true
-            exit 1
-          fi
+          echo "site/ listing:"
+          ls -la site || true
+          echo "site/docs listing:"
+          ls -la site/docs || true
         shell: bash
   
-      - name: Upload pages artifact
+      - name: Upload pages artifact (official)
         uses: actions/upload-pages-artifact@v1
         with:
           path: site/docs
   
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (official)
         uses: actions/deploy-pages@v1
