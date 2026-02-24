@@ -78,3 +78,36 @@ jobs:
             docs/data
             docs/assets/thumbnails
             reports
+            
+  deploy_pages:
+  name: Deploy generated docs to GitHub Pages
+  needs: ingest
+  runs-on: ubuntu-latest
+  steps:
+    - name: Download generated artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: credentials-data
+        path: site
+
+    - name: Ensure docs directory exists
+      run: |
+        # The artifact should contain a docs/ directory when downloaded to 'site'
+        if [ -d "site/docs" ]; then
+          echo "site/docs found"
+        elif [ -d "site" ] && ls site | grep -q '^docs$'; then
+          echo "site/docs found via listing"
+        else
+          echo "ERROR: site/docs not found after downloading artifact"
+          ls -la site || true
+          exit 1
+        fi
+      shell: bash
+
+    - name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: site/docs
+
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v1
