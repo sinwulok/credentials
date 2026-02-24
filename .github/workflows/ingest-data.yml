@@ -78,6 +78,14 @@ jobs:
             docs/data
             docs/assets/thumbnails
             reports
+            
+      - name: Upload site artifact for Pages deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-build
+          path: |
+            docs
+            reports
 
   deploy_pages:
     name: Deploy generated docs to GitHub Pages (official)
