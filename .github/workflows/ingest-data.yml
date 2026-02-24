@@ -5,6 +5,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 env:
   PRIVATE_FILES_REPO: ${{ secrets.PRIVATE_FILES_REPO }}
