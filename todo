@@ -2,7 +2,7 @@
 
 目的
 - 縮減分支並整理 copilot/* 已完成分支到單一 copilot/archived 分支（或其他命名）。
-- 為每個已歸檔分支新增一個不可變更的 notes（docs/copilot-notes/<branch>.md）。
+- 為每個已歸檔分支新增一個不可變更的 notes（`docs/copilot-notes/<branch>.md`）。
 - 在 main 放置待辦與責任人、驗收標準。
 
 待辦（優先順序）
