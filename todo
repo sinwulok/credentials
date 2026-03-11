@@ -8,7 +8,7 @@
 待辦（優先順序）
 - [ ] 建立 docs/copilot-notes/ 目錄並加入 .gitkeep（若尚無）。
 - [ ] 建立 copilot/archived 分支（或命名：copilot/yyy-zzz）。
-- [ ] 執行 branch consolidation 腳本（scripts/consolidate_copilot_branches.sh）：
+- [ ] 規劃並實作 branch consolidation 腳本（scripts/consolidate_copilot_branches.sh，待新增），並執行：
       - 為每個完成的 copilot/* 分支產生 note（notes 內容包含：branch 名、最後 commit、commit message、作者、日期、摘要 diff）
       - 將該分支變更合入 copilot/archived（squash 或 merge）
       - 刪除原始分支（選擇性；建議先保留，確認無誤後刪除）
