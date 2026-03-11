@@ -11,7 +11,7 @@
 - [ ] 執行 branch consolidation 腳本（scripts/consolidate_copilot_branches.sh）：
       - 為每個完成的 copilot/* 分支產生 note（notes 內容包含：branch 名、最後 commit、commit message、作者、日期、摘要 diff）
       - 將該分支變更合入 copilot/archived（squash 或 merge）
-      - 刪除原始分支（選擇性；建議先保留，確認無誤後刪���）
+      - 刪除原始分支（選擇性；建議先保留，確認無誤後刪除）
 - [ ] 在 repo 設定 Branch Protection：
       - 對 copilot/archived 與 main 開啟「Require status checks to pass before merging」
       - 必要時啟用「Require signed commits」
