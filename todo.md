@@ -1,0 +1,23 @@
+# TODO — Credentials repo 整理計畫
+
+目的
+- 縮減分支並整理 copilot/* 已完成分支到單一 copilot/archived 分支（或其他命名）。
+- 為每個已歸檔分支新增一個不可變更的 notes（docs/copilot-notes/<branch>.md）。
+- 在 main 放置待辦與責任人、驗收標準。
+
+待辦（優先順序）
+- [ ] 建立 docs/copilot-notes/ 目錄並加入 .gitkeep（若尚無）。
+- [ ] 建立 copilot/archived 分支（或命名：copilot/yyy-zzz）。
+- [ ] 執行 branch consolidation 腳本（scripts/consolidate_copilot_branches.sh）：
+      - 為每個完成的 copilot/* 分支產生 note（notes 內容包含：branch 名、最後 commit、commit message、作者、日期、摘要 diff）
+      - 將該分支變更合入 copilot/archived（squash 或 merge）
+      - 刪除原始分支（選擇性；建議先保留，確認無誤後刪除）
+- [ ] 在 repo 設定 Branch Protection：
+      - 對 copilot/archived 與 main 開啟「Require status checks to pass before merging」
+      - 必要時啟用「Require signed commits」
+- [ ] 新增 GitHub Action：檢查 docs/copilot-notes 的不可變性（不可修改/刪除，只能新增）
+- [ ] 若需要：將合併步驟改為只能透過特定 bot 帳號或 GitHub Actions 來 append notes（更強的不可變性保證）
+
+備註
+- notes 的不可變性由 CI policy（workflows + branch protection）強制；Git 並無「檔案級不可變」的原生權限，CI 加上 branch protection 是實務上可行且可追溯的方案。
+- 請先在測試分支或 fork 上演練一次 consolidation 流程，再在主 repo 執行。
