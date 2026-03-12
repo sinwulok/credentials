@@ -32,19 +32,18 @@ jobs:
         run: |
           if git ls-remote --heads origin copilot/archived | grep -q "copilot/archived"; then
             echo "copilot/archived already exists, skipping creation"
-            git checkout -b copilot/archived origin/copilot/archived
           else
             echo "Creating copilot/archived from main"
             git checkout -b copilot/archived origin/main
             mkdir -p docs/copilot-notes
-            cat > docs/copilot-notes/README.md << 'MDEOF'
-# Copilot Branch Notes
-
-This directory contains archive notes for completed `copilot/*` branches
-that have been consolidated into the `copilot/archived` branch.
-
-Each file documents the source branch, its last commit SHA, and commit message.
-MDEOF
+            printf '%s\n' \
+              '# Copilot Branch Notes' \
+              '' \
+              'This directory contains archive notes for completed `copilot/*` branches' \
+              'that have been consolidated into the `copilot/archived` branch.' \
+              '' \
+              'Each file documents the source branch, its last commit SHA, and commit message.' \
+              > docs/copilot-notes/README.md
             git add docs/copilot-notes/README.md
             git commit -m "chore: initialize copilot/archived branch with notes directory"
             git push origin copilot/archived
@@ -53,111 +52,111 @@ MDEOF
 
       - name: Create consolidate branches with notes and open PRs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
 
           REPO="${{ github.repository }}"
+          TODAY=$(date -u '+%Y-%m-%d')
 
-          declare -A BRANCH_SHAS=(
-            ["copilot/add-debug-inspection-step"]="2e93b6c9241521913172eddaa0fdfcd51b533d95"
-            ["copilot/add-debug-inspection-step-again"]="0fef486c6dc98502ff3ed3c1a4cbd23ea6a3a22f"
-            ["copilot/add-ingestion-step-and-deploy"]="f9fc3eb04fca66c64d0412068a19d122b7404864"
-            ["copilot/fixrename-private-files"]="2ae7e0925aeaf80b42b766839e06930db1a8e883"
-            ["copilot/initialize-credentials-repo"]="3b2b8a2b4e0f4516089ad23b18817a7750f0e758"
-            ["copilot/update-documentation-for-credentials"]="cb500d231a1c3b3182e12c4ac6d5d2a088a3155d"
-            ["copilot/update-ingest-input-path"]="5ab4061943c0b01acb23e4737778a60fec65ae47"
-          )
+          create_branch_and_pr() {
+            local SOURCE_BRANCH="$1"
+            local SHA="$2"
+            local MSG="$3"
 
-          declare -A BRANCH_MSGS=(
-            ["copilot/add-debug-inspection-step"]="chore(ci): add debug inspection step for private-files checkout"
-            ["copilot/add-debug-inspection-step-again"]="chore(ci): add debug inspection step for private-files checkout"
-            ["copilot/add-ingestion-step-and-deploy"]="Address code review feedback: upgrade actions, improve error messages, add constants"
-            ["copilot/fixrename-private-files"]="chore: remove temp file"
-            ["copilot/initialize-credentials-repo"]="Fix duplicate patterns in .gitignore"
-            ["copilot/update-documentation-for-credentials"]="Add comprehensive security and privacy documentation"
-            ["copilot/update-ingest-input-path"]="Fix: Update ingest input path to private-files/files/credentials and add comprehensive debug logging"
-          )
-
-          BRANCHES=(
-            "copilot/add-debug-inspection-step"
-            "copilot/add-debug-inspection-step-again"
-            "copilot/add-ingestion-step-and-deploy"
-            "copilot/fixrename-private-files"
-            "copilot/initialize-credentials-repo"
-            "copilot/update-documentation-for-credentials"
-            "copilot/update-ingest-input-path"
-          )
-
-          for SOURCE_BRANCH in "${BRANCHES[@]}"; do
-            CONSOLIDATE_BRANCH="consolidate/${SOURCE_BRANCH}"
-            FILE_NAME="${SOURCE_BRANCH//\//__}"
-            NOTES_FILE="docs/copilot-notes/${FILE_NAME}.md"
-            SHA="${BRANCH_SHAS[$SOURCE_BRANCH]}"
-            MSG="${BRANCH_MSGS[$SOURCE_BRANCH]}"
+            local CONSOLIDATE_BRANCH="consolidate/${SOURCE_BRANCH}"
+            local FILE_NAME="${SOURCE_BRANCH//\//__}"
+            local NOTES_FILE="docs/copilot-notes/${FILE_NAME}.md"
 
             echo ""
             echo "=== Processing: $SOURCE_BRANCH ==="
-            echo "  Consolidate branch: $CONSOLIDATE_BRANCH"
-            echo "  Notes file: $NOTES_FILE"
 
-            # Check if consolidate branch already exists
             if git ls-remote --heads origin "$CONSOLIDATE_BRANCH" | grep -q "$CONSOLIDATE_BRANCH"; then
-              echo "  Branch $CONSOLIDATE_BRANCH already exists, skipping"
+              echo "  Branch $CONSOLIDATE_BRANCH already exists, skipping branch creation"
             else
               echo "  Creating branch $CONSOLIDATE_BRANCH from copilot/archived"
               git checkout -b "$CONSOLIDATE_BRANCH" origin/copilot/archived
-
               mkdir -p docs/copilot-notes
-              cat > "$NOTES_FILE" << MDEOF
-# Branch note: ${SOURCE_BRANCH}
-
-- **Source branch:** \`${SOURCE_BRANCH}\`
-- **Last commit SHA:** \`${SHA}\`
-- **Last commit message:** "${MSG}"
-- **Archived date:** $(date -u '+%Y-%m-%d')
-MDEOF
-
+              printf '# Branch note: %s\n\n- **Source branch:** `%s`\n- **Last commit SHA:** `%s`\n- **Last commit message:** "%s"\n- **Archived date:** %s\n' \
+                "$SOURCE_BRANCH" "$SOURCE_BRANCH" "$SHA" "$MSG" "$TODAY" \
+                > "$NOTES_FILE"
               git add "$NOTES_FILE"
               git commit -m "docs: add archive note for ${SOURCE_BRANCH}"
               git push origin "$CONSOLIDATE_BRANCH"
               echo "  Pushed $CONSOLIDATE_BRANCH"
             fi
 
-            # Check if PR already exists
+            local EXISTING_PR
             EXISTING_PR=$(gh pr list \
               --repo "$REPO" \
               --head "$CONSOLIDATE_BRANCH" \
               --base "copilot/archived" \
               --json number \
-              --jq '.[0].number' 2>/dev/null || echo "")
+              --jq '.[0].number' 2>/dev/null || true)
 
             if [ -n "$EXISTING_PR" ]; then
-              echo "  PR #$EXISTING_PR already exists for $CONSOLIDATE_BRANCH → copilot/archived"
+              echo "  PR #$EXISTING_PR already exists"
             else
-              echo "  Creating PR: $CONSOLIDATE_BRANCH → copilot/archived"
-              PR_URL=$(gh pr create \
+              echo "  Creating PR: $CONSOLIDATE_BRANCH -> copilot/archived"
+              local PR_BODY
+              PR_BODY="## Archive branch: \`${SOURCE_BRANCH}\`
+
+          This PR consolidates the completed copilot branch \`${SOURCE_BRANCH}\` into \`copilot/archived\`.
+
+          ### Source branch details
+          - **Branch:** \`${SOURCE_BRANCH}\`
+          - **Last commit SHA:** \`${SHA}\`
+          - **Last commit message:** ${MSG}
+
+          ### Changes
+          Adds a permanent human-readable record at \`${NOTES_FILE}\` documenting the source branch.
+
+          > Note: The source branch \`${SOURCE_BRANCH}\` is preserved and not deleted by this operation."
+
+              gh pr create \
                 --repo "$REPO" \
                 --base "copilot/archived" \
                 --head "$CONSOLIDATE_BRANCH" \
                 --title "Archive: ${SOURCE_BRANCH}" \
-                --body "## Archive branch: \`${SOURCE_BRANCH}\`
-
-This PR consolidates the completed copilot branch \`${SOURCE_BRANCH}\` into \`copilot/archived\`.
-
-### Source branch details
-- **Branch:** \`${SOURCE_BRANCH}\`
-- **Last commit SHA:** \`${SHA}\`
-- **Last commit message:** ${MSG}
-
-### Changes
-- Adds a permanent human-readable record at \`${NOTES_FILE}\` documenting the source branch.
-
-> Note: The source branch \`${SOURCE_BRANCH}\` is preserved and not deleted by this operation.")
-              echo "  Created PR: $PR_URL"
+                --body "$PR_BODY"
+              echo "  PR created"
             fi
-          done
+          }
+
+          create_branch_and_pr \
+            "copilot/add-debug-inspection-step" \
+            "2e93b6c9241521913172eddaa0fdfcd51b533d95" \
+            "chore(ci): add debug inspection step for private-files checkout"
+
+          create_branch_and_pr \
+            "copilot/add-debug-inspection-step-again" \
+            "0fef486c6dc98502ff3ed3c1a4cbd23ea6a3a22f" \
+            "chore(ci): add debug inspection step for private-files checkout"
+
+          create_branch_and_pr \
+            "copilot/add-ingestion-step-and-deploy" \
+            "f9fc3eb04fca66c64d0412068a19d122b7404864" \
+            "Address code review feedback: upgrade actions, improve error messages, add constants"
+
+          create_branch_and_pr \
+            "copilot/fixrename-private-files" \
+            "2ae7e0925aeaf80b42b766839e06930db1a8e883" \
+            "chore: remove temp file"
+
+          create_branch_and_pr \
+            "copilot/initialize-credentials-repo" \
+            "3b2b8a2b4e0f4516089ad23b18817a7750f0e758" \
+            "Fix duplicate patterns in .gitignore"
+
+          create_branch_and_pr \
+            "copilot/update-documentation-for-credentials" \
+            "cb500d231a1c3b3182e12c4ac6d5d2a088a3155d" \
+            "Add comprehensive security and privacy documentation"
+
+          create_branch_and_pr \
+            "copilot/update-ingest-input-path" \
+            "5ab4061943c0b01acb23e4737778a60fec65ae47" \
+            "Fix: Update ingest input path to private-files/files/credentials and add comprehensive debug logging"
 
           echo ""
           echo "=== Done ==="
