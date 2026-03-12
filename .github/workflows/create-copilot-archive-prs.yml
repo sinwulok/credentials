@@ -3,7 +3,7 @@ name: Create Copilot Archive PRs
 on:
   push:
     branches:
-      - copilot/add-copilot-archive-prs
+      - main
   workflow_dispatch:
 
 permissions:
