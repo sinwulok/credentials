@@ -332,14 +332,14 @@ def main():
             fh.write(f"Found {len(raw)} raw records\n\n")
             fh.write("Errors:\n\n")
             for e in errors[:200]:
-                fh.write(f"- {{e}}\n")
-        print(f"Wrote report to {{rpt}}", file=sys.stderr)
+                fh.write(f"- {e}\n")
+        print(f"Wrote report to {rpt}", file=sys.stderr)
 
     if len(normalized) == 0:
         print("No records were ingested; failing the step.", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Ingest completed: wrote {{credentials_path}}, manifest and reports.")
+    print(f"Ingest completed: wrote {credentials_path}, manifest and reports.")
 
 if __name__ == "__main__":
     main()
