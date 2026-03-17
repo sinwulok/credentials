@@ -303,7 +303,7 @@ def main():
             thumb_mapping[rel] = thumb_path
         else:
             # Do NOT fallback to arbitrary pdf; record missing mapping for later report.
-            errors.append(f"No source file found for id={{rec.get('id')}} slug={{rec.get('slug')}}")
+            errors.append(f"No source file found for id={rec.get('id')} slug={rec.get('slug')}")
 
     # write thumb mapping to reports
     reports_dir = Path("reports")
