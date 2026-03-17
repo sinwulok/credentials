@@ -160,10 +160,7 @@ def search_for_source_file(record: Dict[str, Any], search_root: Path) -> Optiona
             for p in search_root.rglob(f"*{token}*{ext}"):
                 if p.is_file():
                     return p
-    # loose fallback: any pdf under search_root
-    for p in search_root.rglob("*.pdf"):
-        if p.is_file():
-            return p
+    # NO loose fallback: do not return arbitrary pdfs (avoid wrong mappings)
     return None
 
 def write_json_file(p: Path, data: Any):
@@ -297,12 +294,16 @@ def main():
         src = search_for_source_file(rec, search_root)
         thumb_path = rec.get("thumbnail")
         if src:
-            # record relative path (prefer path under repo)
+            # prefer path relative to search_root to avoid leaking absolute filesystem paths
             try:
-                rel = str(src)
+                rel = str(src.relative_to(search_root))
             except Exception:
-                rel = str(src)
+                # fallback: use slug if available, otherwise filename only
+                rel = rec.get("slug") or src.name
             thumb_mapping[rel] = thumb_path
+        else:
+            # Do NOT fallback to arbitrary pdf; record missing mapping for later report.
+            errors.append(f"No source file found for id={{rec.get('id')}} slug={{rec.get('slug')}}")
 
     # write thumb mapping to reports
     reports_dir = Path("reports")
@@ -331,14 +332,14 @@ def main():
             fh.write(f"Found {len(raw)} raw records\n\n")
             fh.write("Errors:\n\n")
             for e in errors[:200]:
-                fh.write(f"- {e}\n")
-        print(f"Wrote report to {rpt}", file=sys.stderr)
+                fh.write(f"- {{e}}\n")
+        print(f"Wrote report to {{rpt}}", file=sys.stderr)
 
     if len(normalized) == 0:
         print("No records were ingested; failing the step.", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Ingest completed: wrote {credentials_path}, manifest and reports.")
+    print(f"Ingest completed: wrote {{credentials_path}}, manifest and reports.")
 
 if __name__ == "__main__":
     main()
