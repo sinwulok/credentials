@@ -26,25 +26,25 @@ jobs:
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: private-files
 
-      - name: "Debug: inspect checked-out private-files"
-        run: |
-          echo "---- Env ----"
-          echo "PRIVATE_FILES_REPO=${{ env.PRIVATE_FILES_REPO }}"
-          echo "---- listing private-files root ----"
-          ls -la private-files || echo "private-files not present"
-          echo "---- listing private-files/files (if exists) ----"
-          ls -la private-files/files || echo "private-files/files not present"
-          echo "---- listing private-files/credentials (if exists) ----"
-          ls -la private-files/credentials || echo "private-files/credentials not present"
-          echo "---- git info for private-files ----"
-          if [ -d private-files/.git ]; then
-            git -C private-files rev-parse --abbrev-ref HEAD || true
-            git -C private-files log -1 --pretty=format:'%h %s (%an)' || true
-            git -C private-files remote -v || true
-          else
-            echo "private-files is not a git repo or .git missing"
-          fi
-        shell: bash
+#      - name: "Debug: inspect checked-out private-files"
+#        run: |
+#          echo "---- Env ----"
+#          echo "PRIVATE_FILES_REPO=${{ env.PRIVATE_FILES_REPO }}"
+#          echo "---- listing private-files root ----"
+#          ls -la private-files || echo "private-files not present"
+#          echo "---- listing private-files/files (if exists) ----"
+#          ls -la private-files/files || echo "private-files/files not present"
+#          echo "---- listing private-files/credentials (if exists) ----"
+#          ls -la private-files/credentials || echo "private-files/credentials not present"
+#          echo "---- git info for private-files ----"
+#          if [ -d private-files/.git ]; then
+#            git -C private-files rev-parse --abbrev-ref HEAD || true
+#            git -C private-files log -1 --pretty=format:'%h %s (%an)' || true
+#            git -C private-files remote -v || true
+#          else
+#            echo "private-files is not a git repo or .git missing"
+#          fi
+#        shell: bash
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -72,10 +72,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: List private-files/credentials (debug)
-        run: |
-          echo "Listing private-files/credentials directory:"
-          ls -la private-files/credentials/ || echo "Directory not found: private-files/credentials. Verify private repo checkout and directory structure."
+#      - name: List private-files/credentials (debug)
+#        run: |
+#          echo "Listing private-files/credentials directory:"
+#          ls -la private-files/credentials/ || echo "Directory not found: private-files/credentials. Verify private repo checkout and directory structure."
 
       - name: Ingest descriptive data
         run: |
