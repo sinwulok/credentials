@@ -3,69 +3,501 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Credentials — Thumbnails</title>
+  <title>Credentials — 證書列表</title>
   <style>
-    body{font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial; margin:0; padding:1rem; background:#f6f8fb; color:#0b2136}
-    .wrap{max-width:1100px;margin:0 auto}
-    header{margin-bottom:1rem}
-    h1{margin:.25rem 0}
-    p.lead{color:#667}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
-    .card{background:#fff;padding:6px;border-radius:8px;box-shadow:0 6px 18px rgba(11,33,54,0.06)}
-    img{width:100%;height:auto;display:block;border-radius:6px}
-    .muted{color:#667;font-size:.95rem}
-    .center{text-align:center}
+    /* ── Variables ─────────────────────────────────────────── */
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --accent: #0b76ef;
+      --text: #0b2136;
+      --muted: #6b7a8a;
+      --border: #dde3ea;
+      --parent-bg: #eaf4ff;
+      --child-bg: #f3f7fc;
+    }
+
+    /* ── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    /* ── Base ──────────────────────────────────────────────── */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 1.5rem 1rem;
+    }
+    .wrap { max-width: 1000px; margin: 0 auto; }
+
+    /* ── Header / nav ──────────────────────────────────────── */
+    header { margin-bottom: 1.75rem; }
+    header h1 { margin: 0 0 0.25rem; font-size: 1.55rem; }
+    .lead { margin: 0.2rem 0 0.9rem; color: var(--muted); }
+    .nav { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .nav a {
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .nav a.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .nav a:hover:not(.active) { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Issuer section ────────────────────────────────────── */
+    .issuer-section { margin-bottom: 2.25rem; }
+    .issuer-section h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.05rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--accent);
+      color: var(--text);
+    }
+
+    /* ── Main cert table ───────────────────────────────────── */
+    .cert-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(11,33,54,0.07);
+      font-size: 0.875rem;
+    }
+    .cert-table thead th {
+      background: #eef2f8;
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .cert-table thead th:first-child { width: 56px; }
+    .cert-table tbody .cert-row { border-top: 1px solid var(--border); }
+    .cert-table tbody .cert-row:hover > td { background: #f0f5fc; }
+    .cert-table tbody .cert-row.parent-row > td { background: var(--parent-bg); }
+    .cert-table tbody .cert-row.parent-row:hover > td { background: #daeeff; }
+    .cert-table td {
+      padding: 0.55rem 0.8rem;
+      vertical-align: middle;
+    }
+    .cert-table td.td-thumb {
+      width: 56px;
+      padding: 0.45rem 0.5rem 0.45rem 0.8rem;
+    }
+
+    /* ── Thumbnail ─────────────────────────────────────────── */
+    .thumb-img {
+      width: 46px; height: 46px;
+      object-fit: cover;
+      border-radius: 5px;
+      display: block;
+    }
+    .thumb-icon {
+      width: 46px; height: 46px;
+      border-radius: 5px;
+      background: #dde3ea;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    /* ── Title cell ────────────────────────────────────────── */
+    .cert-title { font-weight: 600; }
+    .cert-meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.12rem; }
+    .badge-series {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 0.08rem 0.45rem;
+      border-radius: 8px;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(11,118,239,0.1);
+      border: 1px solid rgba(11,118,239,0.3);
+      vertical-align: middle;
+      margin-right: 0.4rem;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-top: 0.25rem; }
+    .tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 0.05rem 0.42rem;
+      border-radius: 8px;
+      background: #e8edf5;
+      color: var(--muted);
+    }
+
+    /* ── Misc table cells ──────────────────────────────────── */
+    .td-date { white-space: nowrap; }
+    .td-id { font-family: ui-monospace, "Cascadia Code", monospace; font-size: 0.78rem; color: var(--muted); }
+    .verify-link {
+      display: inline-block;
+      padding: 0.22rem 0.65rem;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .verify-link:hover { background: var(--accent); color: #fff; }
+
+    /* ── Expand-button row ─────────────────────────────────── */
+    .expand-row { border-top: none !important; }
+    .expand-row td {
+      padding: 0 0.8rem 0.55rem 0.8rem;
+      border-top: none;
+    }
+    .expand-btn {
+      background: none;
+      border: 1px solid var(--border);
+      padding: 0.18rem 0.65rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .expand-btn:hover, .expand-btn[aria-expanded="true"] {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .expand-arrow { display: inline-block; transition: transform 0.2s; font-style: normal; }
+    .expand-btn[aria-expanded="true"] .expand-arrow { transform: rotate(90deg); }
+
+    /* ── Children panel ────────────────────────────────────── */
+    .children-row { display: none; }
+    .children-row.open { display: table-row; }
+    .children-row > td {
+      padding: 0.6rem 0.8rem 0.9rem 2rem;
+      background: var(--child-bg);
+    }
+    .children-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.45rem;
+    }
+    .child-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.845rem;
+      background: var(--card);
+      border-radius: 7px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .child-table thead th {
+      background: #f3f6fb;
+      padding: 0.4rem 0.7rem;
+      text-align: left;
+      font-size: 0.775rem;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .child-table tbody tr { border-top: 1px solid var(--border); }
+    .child-table tbody tr:hover td { background: #f7faff; }
+    .child-table td { padding: 0.4rem 0.7rem; vertical-align: middle; }
+    .child-num { color: var(--muted); font-size: 0.78rem; width: 28px; }
+
+    /* ── Empty / error states ──────────────────────────────── */
+    .muted { color: var(--muted); font-size: 0.925rem; }
+    code { font-family: ui-monospace, monospace; font-size: 0.88em; }
+
+    /* ── Footer ────────────────────────────────────────────── */
+    footer {
+      margin-top: 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    footer a { color: inherit; }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .cert-table thead { display: none; }
+      .cert-table tbody .cert-row,
+      .cert-table tbody .expand-row { display: block; }
+      .cert-table tbody .cert-row td,
+      .cert-table tbody .expand-row td { display: block; padding: 0.3rem 0.7rem; }
+      .cert-table tbody .cert-row td::before {
+        content: attr(data-label) ": ";
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .cert-table tbody .cert-row td.td-thumb::before { content: none; }
+      .children-row > td { padding-left: 0.7rem; }
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
     <header>
-      <h1>Credentials — Thumbnails</h1>
-      <p class="lead">已自動產生的 PDF 縮圖（檔名為雜湊以保護原始檔名）。</p>
+      <h1>我的證書 / My Credentials</h1>
+      <p class="lead">依發行機構分類整理的證書列表 &middot; Organized by issuer and series.</p>
+      <nav class="nav">
+        <a href="index.html" class="active">📋 證書列表</a>
+        <a href="gallery.html">🖼️ 縮圖瀏覽</a>
+      </nav>
     </header>
 
-    <section id="content">
-      <p class="muted">載入縮圖中…</p>
-    </section>
+    <div id="content">
+      <p class="muted">載入中…</p>
+    </div>
 
-    <footer style="margin-top:1.5rem" class="muted center">
-      Generated by sinwulok/credentials · Preview
+    <footer>
+      sinwulok/credentials &middot;
+      <a href="https://github.com/sinwulok/credentials" target="_blank" rel="noopener noreferrer">GitHub</a>
     </footer>
   </main>
 
   <script>
-    async function loadThumbnails() {
+    /* ── Tiny DOM helper ──────────────────────────────────── */
+    function el(tag, props, ...kids) {
+      const e = document.createElement(tag);
+      if (props) {
+        for (const [k, v] of Object.entries(props)) {
+          if (k === 'cls') e.className = v;
+          else if (k === 'text') e.textContent = v;
+          else e.setAttribute(k, v);
+        }
+      }
+      for (const k of kids) {
+        if (k === null || k === undefined) continue;
+        e.append(k instanceof Node ? k : String(k));
+      }
+      return e;
+    }
+
+    /* ── Date formatter ───────────────────────────────────── */
+    function fmtDate(d) {
+      if (!d) return '—';
+      try {
+        return new Date(d).toLocaleDateString('zh-Hant-TW',
+          { year: 'numeric', month: 'short', day: 'numeric' });
+      } catch { return d; }
+    }
+
+    /* ── Thumbnail cell ───────────────────────────────────── */
+    const TYPE_ICON = {
+      'certification': '🏆',
+      'professional-certificate': '🎓',
+      'specialization-certificate': '🌟',
+      'course-certificate': '📜',
+    };
+    function thumbCell(cert) {
+      const td = el('td', { cls: 'td-thumb' });
+      if (cert.thumbnail) {
+        td.appendChild(el('img', { src: cert.thumbnail, alt: cert.title, cls: 'thumb-img' }));
+      } else {
+        td.appendChild(el('span', { cls: 'thumb-icon' },
+          TYPE_ICON[cert.type] || '📄'));
+      }
+      return td;
+    }
+
+    /* ── Child certs table ────────────────────────────────── */
+    function buildChildTable(children) {
+      const t = el('table', { cls: 'child-table' },
+        el('thead', {},
+          el('tr', {},
+            el('th', { text: '#' }),
+            el('th', { text: '子證書名稱 / Sub-certificate' }),
+            el('th', { text: '取得日期' }),
+            el('th', { text: '認證編號' }),
+            el('th', { text: '連結' })
+          )
+        )
+      );
+      const tbody = el('tbody', {});
+      children.forEach((c, i) => {
+        const tr = el('tr', {},
+          el('td', { cls: 'child-num', text: String(i + 1) }),
+          (() => {
+            const td = el('td', { 'data-label': '證書名稱' },
+              el('span', { cls: 'cert-title', text: c.title })
+            );
+            if (c.type) td.appendChild(el('div', { cls: 'cert-meta', text: c.type }));
+            return td;
+          })(),
+          el('td', { cls: 'td-date', 'data-label': '日期', text: fmtDate(c.issue_date) }),
+          el('td', { cls: 'td-id', 'data-label': '認證編號', text: c.credential_id || '—' }),
+          (() => {
+            const td = el('td', { 'data-label': '連結' });
+            td.appendChild(c.verification_url
+              ? el('a', { href: c.verification_url, target: '_blank',
+                          rel: 'noopener noreferrer', cls: 'verify-link', text: '驗證' })
+              : el('span', { cls: 'muted', text: '—' }));
+            return td;
+          })()
+        );
+        tbody.appendChild(tr);
+      });
+      t.appendChild(tbody);
+      return t;
+    }
+
+    /* ── Build rows for one top-level cert ────────────────── */
+    function buildCertRows(cert, children) {
+      const rows = [];
+      const isParent = cert.group_role === 'parent' && children.length > 0;
+
+      /* ── data row ── */
+      const tr = el('tr', { cls: 'cert-row' + (isParent ? ' parent-row' : '') });
+      tr.appendChild(thumbCell(cert));
+
+      // title + meta
+      const tdTitle = el('td', { 'data-label': '證書名稱' });
+      const titleSpan = el('span', { cls: 'cert-title' });
+      if (isParent) titleSpan.appendChild(el('span', { cls: 'badge-series', text: '系列' }));
+      titleSpan.appendChild(document.createTextNode(cert.title));
+      tdTitle.appendChild(titleSpan);
+      if (cert.type) tdTitle.appendChild(el('div', { cls: 'cert-meta', text: cert.type }));
+      if (Array.isArray(cert.tags) && cert.tags.length) {
+        const tagBox = el('div', { cls: 'tags' });
+        cert.tags.slice(0, 5).forEach(t => tagBox.appendChild(el('span', { cls: 'tag', text: t })));
+        tdTitle.appendChild(tagBox);
+      }
+      tr.appendChild(tdTitle);
+
+      tr.appendChild(el('td', { cls: 'td-date', 'data-label': '取得日期', text: fmtDate(cert.issue_date) }));
+      tr.appendChild(el('td', { cls: 'td-id', 'data-label': '認證編號', text: cert.credential_id || '—' }));
+
+      const tdLink = el('td', { 'data-label': '連結' });
+      tdLink.appendChild(cert.verification_url
+        ? el('a', { href: cert.verification_url, target: '_blank',
+                    rel: 'noopener noreferrer', cls: 'verify-link', text: '驗證' })
+        : el('span', { cls: 'muted', text: '—' }));
+      tr.appendChild(tdLink);
+      rows.push(tr);
+
+      /* ── expand-button row ── */
+      if (isParent) {
+        const panelId = 'cp-' + cert.id;
+
+        const btnRow = el('tr', { cls: 'expand-row' });
+        const btnTd = el('td', { colspan: '5' });
+        const btn = el('button', {
+          cls: 'expand-btn',
+          type: 'button',
+          'aria-expanded': 'false',
+          'aria-controls': panelId
+        });
+        const arrow = el('i', { cls: 'expand-arrow', text: '▶' });
+        btn.appendChild(arrow);
+        btn.appendChild(document.createTextNode(' 展開 ' + children.length + ' 個子證書'));
+        btn.addEventListener('click', () => {
+          const panel = document.getElementById(panelId);
+          const open = btn.getAttribute('aria-expanded') !== 'true';
+          btn.setAttribute('aria-expanded', String(open));
+          btn.lastChild.textContent = ' ' + (open ? '收起' : '展開') + ' ' + children.length + ' 個子證書';
+          panel.classList.toggle('open', open);
+        });
+        btnTd.appendChild(btn);
+        btnRow.appendChild(btnTd);
+        rows.push(btnRow);
+
+        /* ── children panel row ── */
+        const panelRow = el('tr', { cls: 'children-row', id: panelId });
+        const panelTd = el('td', { colspan: '5' });
+        panelTd.appendChild(el('div', { cls: 'children-label', text: '子證書 / Sub-certificates' }));
+        panelTd.appendChild(buildChildTable(children));
+        panelRow.appendChild(panelTd);
+        rows.push(panelRow);
+      }
+
+      return rows;
+    }
+
+    /* ── Build one issuer section ─────────────────────────── */
+    function buildSection(issuer, certs) {
+      // Map parent_id → children list
+      const childMap = new Map();
+      certs.forEach(c => {
+        if (c.parent_id !== null && c.parent_id !== undefined) {
+          if (!childMap.has(c.parent_id)) childMap.set(c.parent_id, []);
+          childMap.get(c.parent_id).push(c);
+        }
+      });
+
+      const topLevel = certs.filter(c => c.group_role !== 'child');
+
+      const section = el('section', { cls: 'issuer-section' },
+        el('h2', { text: issuer })
+      );
+
+      const table = el('table', { cls: 'cert-table' },
+        el('thead', {},
+          el('tr', {},
+            el('th'),
+            el('th', { text: '證書名稱 / Certificate' }),
+            el('th', { text: '取得日期' }),
+            el('th', { text: '認證編號' }),
+            el('th', { text: '連結' })
+          )
+        )
+      );
+      const tbody = el('tbody', {});
+      topLevel.forEach(cert => {
+        buildCertRows(cert, childMap.get(cert.id) || [])
+          .forEach(row => tbody.appendChild(row));
+      });
+      table.appendChild(tbody);
+      section.appendChild(table);
+      return section;
+    }
+
+    /* ── Main ─────────────────────────────────────────────── */
+    async function loadCredentials() {
       const content = document.getElementById('content');
       try {
-        const res = await fetch('./assets/thumbnails/index.json');
-        if (!res.ok) throw new Error('index.json not found');
-        const files = await res.json();
-        if (!files || files.length === 0) {
-          content.innerHTML = '<p class="muted">目前沒有縮圖。</p>';
+        const res = await fetch('./data/credentials.json');
+        if (!res.ok) throw new Error('credentials.json 未找到 (HTTP ' + res.status + ')');
+        const creds = await res.json();
+
+        if (!Array.isArray(creds) || creds.length === 0) {
+          content.innerHTML = '<p class="muted">目前沒有證書資料。</p>';
           return;
         }
-        const grid = document.createElement('div');
-        grid.className = 'grid';
-        files.forEach(fn => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          const img = document.createElement('img');
-          img.src = './assets/thumbnails/' + fn;
-          img.alt = fn;
-          card.appendChild(img);
-          grid.appendChild(card);
+
+        // Group by issuer, preserving order of first appearance
+        const issuerOrder = [];
+        const byIssuer = new Map();
+        creds.forEach(c => {
+          const key = c.issuer || '其他 / Other';
+          if (!byIssuer.has(key)) { byIssuer.set(key, []); issuerOrder.push(key); }
+          byIssuer.get(key).push(c);
         });
+
         content.innerHTML = '';
-        content.appendChild(grid);
+        issuerOrder.forEach(issuer =>
+          content.appendChild(buildSection(issuer, byIssuer.get(issuer)))
+        );
       } catch (err) {
-        content.innerHTML = '<p class="muted">無法載入縮圖索引：' + err.message + '</p>';
+        content.innerHTML =
+          '<p class="muted">無法載入證書資料：' + err.message + '</p>' +
+          '<p class="muted" style="font-size:.83rem">請確認 <code>data/credentials.json</code> 已正確產生。</p>';
       }
     }
-    // Disable cache when reloading during development in some browsers:
-    if (location.search.indexOf('nocache') !== -1) {
-      fetch('./assets/thumbnails/index.json', {cache: 'no-store'}).catch(()=>{});
-    }
-    loadThumbnails();
+
+    loadCredentials();
   </script>
 </body>
 </html>

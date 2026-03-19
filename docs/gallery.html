@@ -1,21 +1,44 @@
 <!doctype html>
-<html>
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Thumbnails Gallery</title>
+  <title>Credentials — 縮圖瀏覽</title>
   <style>
-    body{font-family:system-ui;padding:1rem;background:#f6f8fb}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
-    .card{background:#fff;padding:6px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
-    img{width:100%;height:auto;display:block;border-radius:4px}
-    .muted{color:#667}
+    :root{--bg:#f6f8fb;--card:#fff;--accent:#0b76ef;--text:#0b2136;--muted:#6b7a8a;--border:#dde3ea}
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;margin:0;padding:1.5rem 1rem;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1000px;margin:0 auto}
+    h1{margin:0 0 .25rem;font-size:1.55rem}
+    .lead{margin:.2rem 0 .9rem;color:var(--muted)}
+    .nav{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.5rem}
+    .nav a{padding:.3rem .8rem;border-radius:6px;text-decoration:none;font-size:.875rem;color:var(--muted);background:var(--card);border:1px solid var(--border);transition:color .15s,border-color .15s,background .15s}
+    .nav a.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .nav a:hover:not(.active){color:var(--accent);border-color:var(--accent)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+    .card{background:var(--card);padding:6px;border-radius:8px;box-shadow:0 2px 8px rgba(11,33,54,0.07)}
+    img{width:100%;height:auto;display:block;border-radius:5px}
+    .muted{color:var(--muted);font-size:.925rem}
+    footer{margin-top:2rem;color:var(--muted);font-size:.85rem;text-align:center}
+    footer a{color:inherit}
   </style>
 </head>
 <body>
-  <h1>Thumbnails Gallery</h1>
-  <p class="muted">Filenames are hashed for privacy.</p>
-  <div id="grid" class="grid"></div>
+  <main class="wrap">
+    <header>
+      <h1>縮圖瀏覽 / Thumbnails Gallery</h1>
+      <p class="lead">已自動產生的 PDF 縮圖（檔名為雜湊以保護原始檔名）。</p>
+    </header>
+    <nav class="nav">
+      <a href="index.html">📋 證書列表</a>
+      <a href="gallery.html" class="active">🖼️ 縮圖瀏覽</a>
+    </nav>
+    <div id="grid" class="grid"></div>
+    <footer>
+      sinwulok/credentials &middot;
+      <a href="https://github.com/sinwulok/credentials" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </footer>
+  </main>
   <script>
     async function load() {
       try {
@@ -23,14 +46,21 @@
         if (!res.ok) throw new Error('index.json not found');
         const files = await res.json();
         const grid = document.getElementById('grid');
-        files.forEach(fn=>{
-          const div = document.createElement('div'); div.className='card';
-          const img = document.createElement('img'); img.src = './assets/thumbnails/'+fn;
+        if (!files || files.length === 0) {
+          grid.innerHTML = '<p class="muted">目前沒有縮圖。</p>';
+          return;
+        }
+        files.forEach(fn => {
+          const div = document.createElement('div'); div.className = 'card';
+          const img = document.createElement('img');
+          img.src = './assets/thumbnails/' + fn;
+          img.alt = fn;
           div.appendChild(img);
           grid.appendChild(div);
         });
-      } catch(e) {
-        document.getElementById('grid').innerText = 'No thumbnails index found. '+ e;
+      } catch (e) {
+        document.getElementById('grid').innerHTML =
+          '<p class="muted">無法載入縮圖索引：' + e.message + '</p>';
       }
     }
     load();
