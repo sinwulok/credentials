@@ -60,3 +60,6 @@ __pycache__/
 *.so
 .Python
 
+
+# Generated credential data (created by CI workflow)
+docs/data/

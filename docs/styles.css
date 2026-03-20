@@ -1,29 +1,335 @@
-:root{
-  --bg:#f6f8fb;
-  --card:#ffffff;
-  --accent:#0b76ef;
-  --text:#0b2136;
-  --muted:#6b7a8a;
+/* ── Design tokens ── */
+:root {
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --accent: #0b76ef;
+  --accent-hover: #0860c5;
+  --text: #0b2136;
+  --muted: #6b7a8a;
+  --border: #e0e8f0;
+  --tag-bg: #eef2f7;
+  --badge-bg: #e8f0fe;
+  --badge-color: #1a56db;
+  --section-line: #0b76ef;
+  --child-header-bg: #f4f7fb;
+  --child-row-border: #edf1f7;
+  --thumb-placeholder-bg: #e8edf5;
+  --radius: 10px;
+  --shadow: 0 4px 18px rgba(11, 33, 54, 0.08);
 }
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  background:linear-gradient(180deg,var(--bg),#e9eef6);
-  color:var(--text);
-  padding:2rem;
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ── Base ── */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(160deg, var(--bg) 0%, #e9eef6 100%);
+  color: var(--text);
+  padding: 1.5rem 1rem 3rem;
+  min-height: 100vh;
 }
-.wrap{max-width:900px;margin:0 auto}
-header h1{margin:0 0 .25rem}
-.lead{margin:.25rem 0 1rem;color:var(--muted)}
-.card{
-  background:var(--card);
-  border-radius:8px;
-  padding:1rem 1.25rem;
-  box-shadow:0 6px 18px rgba(11,33,54,0.06);
-  margin-bottom:1rem;
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
 }
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-footer{margin-top:1.5rem;color:var(--muted);font-size:.9rem}
-.muted{color:var(--muted);font-size:.95rem}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Header ── */
+header { margin-bottom: 1.75rem; }
+header h1 { margin: 0 0 .3rem; font-size: 1.6rem; font-weight: 700; }
+.lead { margin: 0 0 1rem; color: var(--muted); font-size: .95rem; }
+
+/* ── View-mode nav ── */
+.view-nav {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .4rem 1rem;
+  border-radius: 6px;
+  font-size: .875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 2px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.view-btn:not(.active):not([disabled]):hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  text-decoration: none;
+}
+.view-btn.active,
+.view-btn[disabled] {
+  background: #fff;
+  color: var(--accent);
+  cursor: default;
+}
+.view-btn.active:hover { text-decoration: none; }
+
+/* ── Category section ── */
+.category-section { margin-bottom: 2.75rem; }
+.category-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 3px solid var(--section-line);
+  padding-bottom: .45rem;
+  margin: 0 0 1.25rem;
+}
+.cert-list { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* ── Parent cert card ── */
+.parent-cert {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.cert-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  align-items: flex-start;
+}
+
+/* Thumbnail */
+.cert-thumbnail {
+  flex: 0 0 76px;
+  width: 76px;
+  height: 76px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--thumb-placeholder-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.cert-thumbnail img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+  border-radius: inherit;
+}
+.thumb-placeholder {
+  font-size: 2rem;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Cert body */
+.cert-body { flex: 1; min-width: 0; }
+
+.cert-type-badge {
+  display: inline-block;
+  background: var(--badge-bg);
+  color: var(--badge-color);
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .15rem .55rem;
+  border-radius: 4px;
+  margin-bottom: .4rem;
+  letter-spacing: .01em;
+}
+.cert-title {
+  margin: 0 0 .3rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.cert-issuer {
+  color: var(--muted);
+  font-size: .875rem;
+  margin-bottom: .4rem;
+}
+
+/* Tags */
+.cert-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  margin-bottom: .55rem;
+}
+.tag {
+  display: inline-block;
+  background: var(--tag-bg);
+  color: #445;
+  font-size: .72rem;
+  padding: .1rem .45rem;
+  border-radius: 20px;
+  letter-spacing: .01em;
+}
+
+/* Meta row */
+.cert-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  align-items: center;
+  font-size: .825rem;
+  color: var(--muted);
+}
+.cert-date { white-space: nowrap; }
+.cert-id {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: .78rem;
+  color: var(--muted);
+}
+
+/* Verify button */
+.verify-btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff !important;
+  padding: .28rem .8rem;
+  border-radius: 5px;
+  font-size: .8rem;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: background .15s;
+  white-space: nowrap;
+}
+.verify-btn:hover { background: var(--accent-hover); }
+.verify-btn--sm {
+  padding: .2rem .6rem;
+  font-size: .75rem;
+}
+
+/* ── Children section ── */
+.children-section { border-top: 1px solid var(--border); }
+
+.children-header {
+  background: var(--child-header-bg);
+  padding: .55rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+.children-label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.toggle-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: .3rem .85rem;
+  cursor: pointer;
+  font-size: .8rem;
+  font-weight: 500;
+  transition: background .15s;
+  white-space: nowrap;
+}
+.toggle-btn:hover { background: var(--accent-hover); }
+
+/* Children table */
+.children-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .875rem;
+}
+.children-table th {
+  background: #f0f4fa;
+  padding: .5rem .75rem;
+  text-align: left;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+.children-table td {
+  padding: .55rem .75rem;
+  border-bottom: 1px solid var(--child-row-border);
+  vertical-align: middle;
+}
+.children-table tbody tr:last-child td { border-bottom: none; }
+.children-table tbody tr:hover { background: #fafcff; }
+
+.col-num {
+  width: 2.5rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: .8rem;
+}
+.col-date { white-space: nowrap; color: var(--muted); font-size: .82rem; }
+.col-id {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: .78rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.child-title { font-weight: 600; line-height: 1.3; }
+.child-type { color: var(--muted); font-size: .76rem; margin-top: .1rem; }
+
+/* ── Utility ── */
+.muted { color: var(--muted); font-size: .95rem; }
+.center { text-align: center; }
+
+/* ── Footer ── */
+footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: .85rem;
+  text-align: center;
+}
+
+/* ── Thumbnail gallery grid (used by gallery.html) ── */
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+.thumb-card {
+  background: var(--card);
+  padding: 6px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(11, 33, 54, 0.06);
+}
+.thumb-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  body { padding: 1rem .75rem 2.5rem; }
+  .cert-card { flex-direction: column; }
+  .cert-thumbnail { width: 60px; height: 60px; flex: none; }
+  .cert-meta { gap: .4rem; }
+
+  /* hide credential ID column in children table on narrow screens */
+  .children-table .col-id,
+  .children-table th.col-id { display: none; }
+}
+
+@media (max-width: 420px) {
+  /* hide date column as well on very narrow screens */
+  .children-table .col-date,
+  .children-table th.col-date { display: none; }
+}
+
