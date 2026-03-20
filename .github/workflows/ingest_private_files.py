@@ -65,6 +65,15 @@ def normalize_record(rec: Dict[str, Any]) -> Dict[str, Any]:
                 out[f] = [str(x).strip().lower() for x in v]
             else:
                 out[f] = []
+        elif f == "group_role":
+            # Normalize group_role to the canonical primary/supporting vocabulary
+            v2 = (v or "").strip().lower()
+            if v2 in {"primary", "main", "parent", "master"}:
+                out[f] = "primary"
+            elif v2 in {"supporting", "sup", "supclass", "child", "subclass", "sub"}:
+                out[f] = "supporting"
+            else:
+                out[f] = v2 if v2 else None
         else:
             out[f] = v if v not in ("", None, "") else None
     # preserve extras
