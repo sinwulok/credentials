@@ -148,6 +148,19 @@ header h1 { margin: 0 0 .3rem; font-size: 1.6rem; font-weight: 700; }
   margin-bottom: .4rem;
   letter-spacing: .01em;
 }
+.cert-role-badge {
+  display: inline-block;
+  background: #e6f4ea;
+  color: #1e7e34;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: .15rem .55rem;
+  border-radius: 4px;
+  margin-bottom: .4rem;
+  margin-right: .35rem;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
 .cert-title {
   margin: 0 0 .3rem;
   font-size: 1rem;

@@ -96,9 +96,9 @@
     const count = children.length;
     return `<div class="children-section">
       <div class="children-header">
-        <span class="children-label">子項目 / SUB-CERTIFICATES</span>
+        <span class="children-label">支援課程 / Supporting courses</span>
         <button class="toggle-btn" data-count="${count}" aria-expanded="false">
-          ▼ 展示 ${count} 個子項目
+          ▼ 展示 ${count} 個支援課程
         </button>
       </div>
       <div class="children-wrapper" hidden>
@@ -106,7 +106,7 @@
           <thead>
             <tr>
               <th class="col-num">#</th>
-              <th>子項目名稱 / Sub-certificate</th>
+              <th>支援課程名稱 / Supporting courses</th>
               <th class="col-date">發證日期</th>
               <th class="col-id">憑證編號</th>
               <th>驗證</th>
@@ -130,6 +130,7 @@
       <div class="cert-card">
         <div class="cert-thumbnail" aria-hidden="true">${thumbHtml}</div>
         <div class="cert-body">
+          ${cert.group_role === 'primary' ? '<div class="cert-role-badge">Primary</div>' : ''}
           ${cert.type ? `<div class="cert-type-badge">🎓 ${esc(cert.type)}</div>` : ''}
           <h3 class="cert-title">${esc(cert.title)}</h3>
           ${cert.issuer ? `<div class="cert-issuer">${esc(cert.issuer)}</div>` : ''}
@@ -175,7 +176,7 @@
       for (const rec of data) {
         if (rec.visibility === 'hidden') continue;
 
-        const isChild = rec.group_role === 'child' && rec.parent_id != null && rec.parent_id !== '';
+        const isChild = rec.group_role === 'supporting' && rec.parent_id != null && rec.parent_id !== '';
         if (isChild) {
           const pid = String(rec.parent_id);
           if (!childrenByParentId[pid]) childrenByParentId[pid] = [];
@@ -222,11 +223,11 @@
           if (expanded) {
             wrapper.hidden = true;
             btn.setAttribute('aria-expanded', 'false');
-            btn.textContent = '▼ 展示 ' + count + ' 個子項目';
+            btn.textContent = '▼ 展示 ' + count + ' 個支援課程';
           } else {
             wrapper.hidden = false;
             btn.setAttribute('aria-expanded', 'true');
-            btn.textContent = '▲ 隱藏 ' + count + ' 個子項目';
+            btn.textContent = '▲ 隱藏 ' + count + ' 個支援課程';
           }
         });
       });

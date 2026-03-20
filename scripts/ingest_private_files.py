@@ -104,6 +104,16 @@ def normalize_record(raw: Dict[str, Any], auto_id: int) -> tuple[Dict[str, Any],
             else:
                 record[field] = []
         
+        elif field == "group_role":
+            # Normalize group_role to the canonical primary/supporting vocabulary
+            v = (value or "").strip().lower()
+            if v in {"primary", "main", "parent", "master"}:
+                record[field] = "primary"
+            elif v in {"supporting", "sup", "supclass", "child", "subclass", "sub"}:
+                record[field] = "supporting"
+            else:
+                record[field] = v if v else None
+
         else:
             # Default: copy as-is, convert empty strings to None
             if value == "" or value == "null":
