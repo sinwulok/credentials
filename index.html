@@ -175,7 +175,7 @@
       for (const rec of data) {
         if (rec.visibility === 'hidden') continue;
 
-        const isChild = rec.group_role === 'child' && rec.parent_id != null && rec.parent_id !== '';
+        const isChild = rec.group_role === 'sup' && rec.parent_id != null && rec.parent_id !== '';
         if (isChild) {
           const pid = String(rec.parent_id);
           if (!childrenByParentId[pid]) childrenByParentId[pid] = [];
