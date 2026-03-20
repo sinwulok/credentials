@@ -55,6 +55,9 @@
   function byOrderThenId(a, b) {
     return (a.order ?? 999999) - (b.order ?? 999999) || (a.id ?? 0) - (b.id ?? 0);
   }
+  function byIssueDateDesc(a, b) {
+    return (new Date(b.issue_date || 0)) - (new Date(a.issue_date || 0));
+  }
 
   /* ── HTML escaping ── */
   function esc(str) {
@@ -188,7 +191,7 @@
 
       /* sort children by order then id */
       for (const kids of Object.values(childrenByParentId)) {
-        kids.sort(byOrderThenId);
+        kids.sort(byIssueDateDesc);
       }
 
       /* ── categorise parents ── */
@@ -203,8 +206,8 @@
         }
       }
 
-      specializations.sort(byOrderThenId);
-      learningPaths.sort(byOrderThenId);
+      specializations.sort(byIssueDateDesc);
+      learningPaths.sort(byIssueDateDesc);
 
       /* ── render ── */
       const html =
