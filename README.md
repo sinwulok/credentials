@@ -16,7 +16,7 @@ This repository is used to publicly showcase my obtained credentials and qualifi
 ---
 
 ## GitHub Pages
-#### https://sinwulok.github.io/credentials/ 
+#### https://swlokzk.github.io/credentials/ 
 此 repo 包含公開的 GitHub Pages。
 This repo may include a public GitHub Pages site.
 
@@ -42,5 +42,5 @@ Contributions via Pull Request are welcome. Before submitting, ensure entries co
 
 
 ## 聯絡 / Contact
-如需查核原件或申請重用，請聯絡：sinwulok（請註明用途與受眾）。  
-To request verification of originals or permission for reuse, contact: sinwulok (please include purpose and audience in your message).
+如需查核原件或申請重用，請聯絡：swlokzk（請註明用途與受眾）。  
+To request verification of originals or permission for reuse, contact: swlokzk (please include purpose and audience in your message).
